@@ -1,0 +1,6 @@
+seamless_communication/
+librosa==0.10.1
+openai==0.28.0
+openai-whisper==20230918
+torch==2.0.1
+torchaudio==2.0.2
