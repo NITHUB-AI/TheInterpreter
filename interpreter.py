@@ -7,7 +7,7 @@ def speech_to_speech(file_path):
     print(f"Resampling file to {target_sr}...")
     converted_file_path, sampling_rate = convert_audio(file_path, target_sr)
     print("Transcribing audio file...")
-    en_text = transcribe(converted_file_path)
+    en_text = transcribe(converted_file_path, api=True)
     file_name = file_path.split('/')[-1][:-4]
     print("translating text and generating speech...")
     translated_text, translated_audio = seamless_t2st(en_text, f"fr_{file_name}.wav", sampling_rate)

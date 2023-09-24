@@ -5,20 +5,22 @@ import os
 import librosa
 import soundfile as sf
 # s2t API
+from dotenv import load_dotenv
 import openai
 # s2t OS
-import whisper
+#import whisper
 # t2st
 import torch
 from seamless_communication.models.inference import Translator
 import torchaudio
 
+load_dotenv()
 # load models:
 # openai whisper
-model = whisper.load_model("large") # 11.2
+model = ... # whisper.load_model("large")
+
 # facebook seamlessm4t
 translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
-# 22
 
 def convert_audio(input_file, target_sr=16000):
     # Load the audio file
