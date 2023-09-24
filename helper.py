@@ -26,7 +26,7 @@ def convert_audio(input_file, target_sr=16000):
     # Load the audio file
     y, sr = librosa.load(input_file, sr=None, mono=True)
 
-    # Resample the audio to 16000 Hz if necessary
+    # Resample the audio to {target_sr} Hz if necessary
     if sr != target_sr:
         y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
 
