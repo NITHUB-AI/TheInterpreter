@@ -34,6 +34,11 @@ Welcome to **The Interpreter**! Our demo showcases the power of cutting-edge mac
    pip install -r requirements.txt
    ```
 
+5. Add your [OpenAI](https://platform.openai.com/) API Key to a `.env` file in the project directory in the form:
+   ```
+   OPENAI_API_KEY=<YOUR_API_KEY>
+   ```
+
 ### Usage
 
 Run the application to interprete an audio file:
