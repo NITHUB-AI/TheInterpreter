@@ -24,11 +24,11 @@ Welcome to **The Interpreter**! Our demo showcases the power of cutting-edge mac
    cd TheInterpreter
    ```
     
-4. Install the required packages:
+3. Install the required packages:
    ```sh
    pip install -r requirements.txt
    ```
-5. Add your [OpenAI](https://platform.openai.com/) and [Huggingface](https://huggingface.co/) API Keys to a `.env` file in the project directory in the form:
+4. Add your [OpenAI](https://platform.openai.com/) and [Huggingface](https://huggingface.co/) API Keys to a `.env` file in the project directory in the form:
    ```
    OPENAI_API_KEY=<YOUR_API_KEY>
    HF_API_KEY=<YOUR_API_KEY>
