@@ -40,7 +40,7 @@ def transcribe(file_path, api=False):
 
     return transcript
 
-def seamless_t2st(transcript, translated_audio, sampling_rate):
+def seamless_t2st(transcript, translated_audio):
     client = Client("https://facebook-seamless-m4t.hf.space/")
     result = client.predict(
                     "T2ST (Text to Speech translation)",	# str (Option from: ['S2ST (Speech to Speech translation)', 'S2TT (Speech to Text translation)', 'T2ST (Text to Speech translation)', 'T2TT (Text to Text translation)', 'ASR (Automatic Speech Recognition)'])				
