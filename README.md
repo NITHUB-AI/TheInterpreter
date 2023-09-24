@@ -23,15 +23,15 @@ Welcome to **The Interpreter**! Our demo showcases the power of cutting-edge mac
    ```sh
    cd TheInterpreter
    ```
-
-3. Clone the seamless communication repo:
-    ```sh
-    git clone https://github.com/facebookresearch/seamless_communication.git
-    ```
     
 4. Install the required packages:
    ```sh
    pip install -r requirements.txt
+   ```
+5. Add your [OpenAI](https://platform.openai.com/) and [Huggingface](https://huggingface.co/) API Keys to a `.env` file in the project directory in the form:
+   ```
+   OPENAI_API_KEY=<YOUR_API_KEY>
+   HF_API_KEY=<YOUR_API_KEY>
    ```
 
 ### Usage
