@@ -16,14 +16,14 @@ def convert_audio(input_file, target_sr=16000):
     # Load the audio file
     y, sr = librosa.load(input_file, sr=None, mono=True)
 
-    # Resample the audio to 16000 Hz if necessary
-    if sr != 16000:
+    # Resample the audio to {target_sr} Hz if necessary
+    if sr != target_sr:
         y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
 
     # Save the audio in WAV format
     file_name = re.split(r'/|\\|\.', input_file)[-2]
     output_file = f"{file_name}_{target_sr}.wav"
-    sf.write(output_file, y, 16000)
+    sf.write(output_file, y, target_sr)
     return output_file, sr
 
 def transcribe(file_path, api=False):
