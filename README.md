@@ -24,7 +24,12 @@ Welcome to **The Interpreter**! Our demo showcases the power of cutting-edge mac
    cd TheInterpreter
    ```
 
-3. Install the required packages:
+3. Clone the seamless communication repo:
+    ```sh
+    git clone https://github.com/facebookresearch/seamless_communication.git
+    ```
+    
+4. Install the required packages:
    ```sh
    pip install -r requirements.txt
    ```
