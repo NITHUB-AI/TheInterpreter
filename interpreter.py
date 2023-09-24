@@ -1,4 +1,5 @@
 from helper import convert_audio, transcribe, seamless_t2st
+import argparse
 
 def speech_to_speech(file_path):
     print("Start...")
@@ -16,6 +17,11 @@ def speech_to_speech(file_path):
     return translated_text, translated_audio
 
 if __name__ == "__main__":
-    translated_text, translated_audio = speech_to_speech("data/trial_eng.m4a")
+    parser = argparse.ArgumentParser(description='Process an audio file.')
+    parser.add_argument('audio_path', type=str, help='Path to the audio file')
+    
+    args = parser.parse_args()
+    
+    translated_text, translated_audio = speech_to_speech(args.audio_path)
     print(translated_text)
     print(translated_audio)
