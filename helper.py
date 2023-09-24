@@ -44,7 +44,7 @@ def transcribe(file_path, api=False):
     transcript = result["text"]
     return transcript
 
-def seamless_t2st(transcript, translated_audio, sampling_rate):
+def seamless_t2st(transcript, translated_audio):
     translated_text, wav, sr = translator.predict(
         transcript,
         "t2st", 'fra', src_lang='eng'
