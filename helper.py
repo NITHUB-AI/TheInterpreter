@@ -38,10 +38,10 @@ def convert_audio(input_file, target_sr=16000):
 def transcribe(file_path, api=False):
     if api:
         audio_file= open(file_path, "rb")
-        transcript = openai.Audio.transcribe("whisper-1", audio_file, api_key=os.getenv("OPENAI_API_KEY"))
+        result = openai.Audio.transcribe("whisper-1", audio_file, api_key=os.getenv("OPENAI_API_KEY"))
     else:
         result = model.transcribe(file_path, language='English', temperature=0)
-        transcript = result["text"]
+    transcript = result["text"]
     return transcript
 
 def seamless_t2st(transcript, translated_audio, sampling_rate):
