@@ -100,3 +100,8 @@ git
 # Ignore images and audio
 *.wav
 *.m4a
+
+# ignore model files
+/fra
+/vits
+*.gz
