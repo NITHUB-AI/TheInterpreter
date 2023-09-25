@@ -5,7 +5,6 @@ import os
 import re
 # audio conversion
 import openai
-import librosa
 import soundfile as sf
 import subprocess
 
