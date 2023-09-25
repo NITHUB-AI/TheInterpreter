@@ -43,6 +43,6 @@ Run the application to interprete an audio file:
 
 ## 🛠️ Technologies Used
   
-- **OpenAI's Whisper**: As the backbone for audio translation.
+- **OpenAI's Whisper**: As the backbone for audio transcription.
   
 - **Facebooks SeamlessM4T**: For translation and speech generation.
