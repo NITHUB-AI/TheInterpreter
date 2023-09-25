@@ -1,4 +1,4 @@
-from helper import convert_audio, transcribe, seamless_t2st
+from helper import convert_audio, transcribe, seamless_t2st, MODE
 import argparse
 
 def speech_to_speech(file_path):
@@ -10,7 +10,8 @@ def speech_to_speech(file_path):
     en_text = transcribe(converted_file_path, api=True)
     file_name = file_path.split('/')[-1][:-4]
     print("translating text and generating speech...")
-    translated_text, translated_audio = seamless_t2st(en_text, f"fr_{file_name}.wav")
+    if MODE == "2STEP":
+        translated_text, translated_audio = seamless_t2st(en_text, f"fr_{file_name}.wav")
     print(f"Resampling file to {sampling_rate}...")
     translated_audio, _ = convert_audio(translated_audio, target_sr=sampling_rate)
     print("End.")
