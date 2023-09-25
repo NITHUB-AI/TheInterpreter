@@ -1,9 +1,9 @@
 # import libraries models:
 
 import os
-# audio conversion
-import librosa
-import soundfile as sf
+import re
+import subprocess
+
 # s2t API
 from dotenv import load_dotenv
 import openai
@@ -24,15 +24,10 @@ translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36lan
 
 def convert_audio(input_file, target_sr=16000):
     # Load the audio file
-    y, sr = librosa.load(input_file, sr=None, mono=True)
-
-    # Resample the audio to {target_sr} Hz if necessary
-    if sr != target_sr:
-        y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
-
-    # Save the audio in WAV format
-    output_file = f'{input_file[:-4]}_{target_sr}.wav'
-    sf.write(output_file, y, target_sr)
+    filename = re.split(r'\.|\\|/', input_file)[-2]
+    output_file = f"{filename}_{target_sr}.wav"
+    subprocess.call(f'ffmpeg -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
+    sr = 16000 if target_sr == 48000 else 48000
     return output_file, sr
 
 def transcribe(file_path, api=False):
