@@ -24,10 +24,12 @@ Welcome to **The Interpreter**! Our demo showcases the power of cutting-edge mac
    cd TheInterpreter
    ```
     
-3. Install the required packages:
+3. Run the initialization script which also installs requirements:
    ```sh
-   pip install -r requirements.txt
+   chmod +x initialize.sh
+   ./initialize.sh
    ```
+
 4. Add your [OpenAI](https://platform.openai.com/) and [Huggingface](https://huggingface.co/) API Keys to a `.env` file in the project directory in the form:
    ```
    OPENAI_API_KEY=<YOUR_API_KEY>
@@ -43,6 +45,8 @@ Run the application to interprete an audio file:
 
 ## 🛠️ Technologies Used
   
-- **OpenAI's Whisper**: As the backbone for audio translation.
+- **OpenAI's Whisper**: As the backbone for audio transcription.
+
+- **Helsinki's Opus MT**: As the backbone for text translation.
   
-- **Facebooks SeamlessM4T**: For translation and speech generation.
+- **Facebooks MMS Text to Speech**: For speech generation.
