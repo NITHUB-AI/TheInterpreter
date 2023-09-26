@@ -32,7 +32,6 @@ if audio_file:
     a = time.time()
     translated_text, translated_audio = speech_to_speech(tmp_filepath)
     time_spent = time.time() - a
-    # st.write("Translated text " + translated_text)
 
     st.subheader("Results")
     st.write(f"It took {time_spent}s to process your audio")
@@ -41,6 +40,8 @@ if audio_file:
         label="Here's your translated audio",
         data=get_audio_download(translated_audio),
         file_name=translated_audio,
-        mime="audio/wav",
+        # the produced audio is a wav file. this should be changed if the
+        # audio mimetype changes
+        mime="audio/wav", 
         key="audio_download_btn"
     )

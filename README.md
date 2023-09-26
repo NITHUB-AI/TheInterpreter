@@ -53,6 +53,11 @@ Run the application to interprete an audio file:
    python interpreter.py audio_path.m4a
    ```
 
+Run the streamlit web app:
+```sh
+streamlit run webapp.py
+```
+
 ## 🛠️ Technologies Used
   
 - **OpenAI's Whisper**: As the backbone for audio translation.
