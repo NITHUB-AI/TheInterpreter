@@ -21,8 +21,11 @@ if MODE == "2STEP":
 elif MODE == "API_2STEP":
     # use gradio client
     from gradio_client import Client
+elif MODE == "3STEP":
+    from mms_tts import mms_tts
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
+HELSINKI_API_URL = "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr"
 
 
 if MODE == "2STEP":
@@ -36,7 +39,7 @@ def convert_audio(input_file, target_sr=16000):
     # Load the audio file
     filename = re.split(r'\.|\\|/', input_file)[-2]
     output_file = f"{filename}_{target_sr}.wav"
-    subprocess.call(f'ffmpeg -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
+    subprocess.call(f'ffmpeg -loglevel error -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
     sr = 16000 if target_sr == 48000 else 48000
     return output_file, sr
 
@@ -84,4 +87,16 @@ def seamless_t2st(transcript, translated_audio):
                         api_name="/run"
         )
         translated_audio, translated_text = result
+    return translated_text, translated_audio
+
+def helsinki_t2t(en_transcript):
+    payload = {"inputs": en_transcript, "options": {"wait_for_model": True, 'truncation': 'only_first'}}
+    response = requests.post(HELSINKI_API_URL, headers=HEADER, json=payload)
+    # print(response.json())
+    fr_sentence = response.json()[0]["translation_text"]
+    return fr_sentence
+
+def helsinki_mms_t2st(en_transcript, translated_audio):
+    translated_text = helsinki_t2t(en_transcript)
+    mms_tts(translated_text, translated_audio)
     return translated_text, translated_audio

@@ -100,6 +100,7 @@ git
 # Ignore images and audio
 *.wav
 *.m4a
+*.mp3
 
 # ignore tts model
 /fra
