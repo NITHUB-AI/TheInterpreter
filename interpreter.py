@@ -6,6 +6,7 @@ import argparse
 import re
 import os
 import time
+import tempfile
 import logging
 logging.getLogger().setLevel(logging.ERROR)
 
@@ -17,26 +18,24 @@ def speech_to_speech(file_path):
     print(f"Starting in {MODE} mode...")
     target_sr = 16000
 
-    print(f"Resampling file to {target_sr}...")
-    converted_file_path, sampling_rate = convert_audio(file_path, target_sr)
-    
-    print("Transcribing audio file...")
-    en_text = transcribe(converted_file_path)
+    with tempfile.NamedTemporaryFile('wb+', suffix='.wav', delete=True) as tempf:
+        print(f"Resampling file to {target_sr}...")
+        converted_file_path, sampling_rate = convert_audio(file_path, tempf.name, target_sr)
+        
+        print("Transcribing audio file...")
+        en_text = transcribe(converted_file_path)
     print(en_text)
-    print("translating text and generating speech...")
-    file_name = re.split(r'/|\\|\.', file_path)[-2]
-    if "2STEP" in MODE:
-        translated_text, translated_audio = seamless_t2st(en_text, f"fr_{file_name}.wav")
-    else:
-        translated_text, translated_audio = helsinki_mms_t2st(en_text, f"fr_{file_name}.wav")
 
-    print(f"Resampling file to {sampling_rate}...")
-    translated_audio, _ = convert_audio(translated_audio, target_sr=sampling_rate)
-    
-    print("Cleaning up...")
-    for file in os.listdir():
-        if file[-3:] == "wav" and file != translated_audio:
-            os.remove(file)
+    print("translating text and generating speech...")
+    with tempfile.NamedTemporaryFile('wb+', suffix='.wav', delete=True) as tempf:
+        if "2STEP" in MODE:
+            translated_text, translated_audio = seamless_t2st(en_text, tempf.name)
+        else:
+            translated_text, translated_audio = helsinki_mms_t2st(en_text, tempf.name)
+
+        print(f"Resampling file to {sampling_rate}...")
+        file_name = re.split(r'/|\\|\.', file_path)[-2]
+        translated_audio, _ = convert_audio(translated_audio, f"fr_{file_name}_{int(time.time())}.wav", target_sr=sampling_rate)
     print("End.")
 
     return translated_text, translated_audio

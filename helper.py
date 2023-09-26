@@ -36,11 +36,9 @@ if MODE == "2STEP":
     # facebook seamlessm4t
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
 
-def convert_audio(input_file, target_sr=16000):
+def convert_audio(input_file, output_file, target_sr=16000):
     # Load the audio file
-    filename = re.split(r'\.|\\|/', input_file)[-2]
-    output_file = f"{filename}_{target_sr}_{time.time()}.wav"
-    subprocess.call(f'ffmpeg -loglevel error -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
+    subprocess.call(f'ffmpeg -loglevel error -y -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
     sr = 16000 if target_sr == 48000 else 48000
     return output_file, sr
 
