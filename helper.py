@@ -3,6 +3,7 @@ import os
 import re
 import requests
 import subprocess
+import time
 from dotenv import load_dotenv
 # s2t API
 import openai
@@ -38,7 +39,7 @@ if MODE == "2STEP":
 def convert_audio(input_file, target_sr=16000):
     # Load the audio file
     filename = re.split(r'\.|\\|/', input_file)[-2]
-    output_file = f"{filename}_{target_sr}.wav"
+    output_file = f"{filename}_{target_sr}_{time.time()}.wav"
     subprocess.call(f'ffmpeg -loglevel error -i {input_file} -ac 1 -ar {target_sr} {output_file}', shell=True)
     sr = 16000 if target_sr == 48000 else 48000
     return output_file, sr
