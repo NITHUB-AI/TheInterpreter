@@ -13,7 +13,7 @@ import torch
 load_dotenv()
 
 MODE = os.getenv("MODE").upper()
-
+print(MODE)
 if MODE == "2STEP":
     # load models locally
     import whisper
@@ -26,7 +26,7 @@ elif MODE == "3STEP":
     from mms_tts import mms_tts
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
-HELSINKI_API_URL = "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr"
+HELSINKI_API_URL = "https://nithub-ai-helsinki-opus-mt-en-fr.hf.space/api/predict"
 
 
 if MODE == "2STEP":
@@ -91,10 +91,10 @@ def seamless_t2st(transcript, translated_audio):
     return translated_text, translated_audio
 
 def helsinki_t2t(en_transcript):
-    payload = {"inputs": en_transcript, "options": {"wait_for_model": True, 'truncation': 'only_first'}}
+    payload = {"data": [en_transcript], "session_hash": ""}
     response = requests.post(HELSINKI_API_URL, headers=HEADER, json=payload)
     # print(response.json())
-    fr_sentence = response.json()[0]["translation_text"]
+    fr_sentence = response.json()["data"][0]
     return fr_sentence
 
 def helsinki_mms_t2st(en_transcript, translated_audio):
