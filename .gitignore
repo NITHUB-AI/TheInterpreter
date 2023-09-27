@@ -107,6 +107,6 @@ git
 /vits
 *.gz
 
-# ignore artifacts
+# ignore local tests artifacts
 local_tests/dump
 local_tests/files
