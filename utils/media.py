@@ -6,7 +6,7 @@ from .files import generate_filename
 # Extracts the audio and video streams from a video and return their file locations.
 def extract_audio_and_video_parts(video_file: str, output_dir: str) -> tuple[str | None, str | None]:
     # generate file paths for the audio and video streams
-    out_audio = os.path.join(output_dir, generate_filename(extension='.wav'))
+    out_audio = os.path.join(output_dir, generate_filename(extension='.mp3'))
     out_video = os.path.join(output_dir, generate_filename(extension='.mp4'))
 
     # extract audio
@@ -14,23 +14,34 @@ def extract_audio_and_video_parts(video_file: str, output_dir: str) -> tuple[str
            .input(video_file)
            .arg('q:a', 0)
            .arg('map', 'a')
-           .output(out_audio))
-    audio_retcode = subprocess.call(cmd.build(), shell=True)
+           .output(out_audio)
+           .build())
+    audio_retcode = subprocess.call(cmd, shell=True)
+    print(cmd)
 
     # extract video
     cmd = (FfmpegCommand()
            .input(video_file)
            .arg('an', None)
-           .output(out_video))
-    video_retcode = subprocess.call(cmd.build(), shell=True)
+           .output(out_video)
+           .build())
+    video_retcode = subprocess.call(cmd, shell=True)
+    print(cmd)
 
     return None if audio_retcode != 0 else out_audio, None if video_retcode != 0 else out_video
 
 
 # Combines an audio and video source into a single video file.
-def stitch_audio_and_video(audio_file: str, video_file: str, output_file: str) -> str:
-    retcode = subprocess.check_call(
-        f'ffmpeg -loglevel error -i {audio_file} -i {video_file} ${output_file}')
+def stitch_audio_and_video(audio_file: str, video_file: str, output_file: str) -> bool:
+    cmd = (FfmpegCommand()
+           .input(video_file)
+           .input(audio_file)
+           .arg('c:v', 'copy')
+           .arg('c:a', 'copy')
+           .output(output_file)
+           .build())
+    print(cmd)
+    retcode = subprocess.call(cmd, shell=True)
     return True if retcode == 0 else False
 
 

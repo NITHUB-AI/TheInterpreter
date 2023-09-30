@@ -14,6 +14,9 @@ def test_audio_and_video_extraction():
         test_video, dump_dir)
     print(only_audio, only_video)
 
+    res = stitch_audio_and_video(only_audio, only_video, os.path.join(dump_dir, 'out.mp4'))
+    print(res)
+
 
 if __name__ == "__main__":
     test_audio_and_video_extraction()
