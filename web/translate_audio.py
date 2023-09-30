@@ -33,8 +33,8 @@ def translate_audio():
             label="Here's your translated audio",
             data=get_audio_download(translated_audio),
             file_name=translated_audio,
-            # the produced audio is a wav file. this should be changed if the
+            # the produced audio is an mp3 file. this should be changed if the
             # audio mimetype changes
-            mime="audio/wav",
+            mime="audio/mp3",
             key="audio_download_btn"
         )
