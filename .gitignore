@@ -111,5 +111,6 @@ git
 *.gz
 
 # ignore local tests artifacts
+test*
 local_tests/dump
 local_tests/files
