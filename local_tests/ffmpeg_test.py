@@ -1,7 +1,7 @@
 import tempfile
 import os
-from utils.media import extract_audio_and_video_parts, stitch_audio_and_video
-from utils.files import get_audio_bytes
+from util.media import extract_audio_and_video_parts, stitch_audio_and_video
+from util.files import get_audio_bytes
 
 script_dir = os.path.dirname(__file__)
 dump_dir = os.path.join(script_dir, 'dump')
