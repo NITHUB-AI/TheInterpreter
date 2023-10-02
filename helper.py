@@ -14,6 +14,7 @@ load_dotenv()
 
 MODE = os.getenv("MODE").upper()
 print(MODE)
+
 if MODE == "2STEP":
     # load models locally
     import whisper
@@ -27,7 +28,7 @@ elif MODE == "3STEP":
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
 HELSINKI_API_URL = "https://nithub-ai-helsinki-opus-mt-en-fr.hf.space/api/predict"
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 if MODE == "2STEP":
     # openai whisper
@@ -95,7 +96,33 @@ def helsinki_t2t(en_transcript):
     fr_sentence = response.json()["data"][0]
     return fr_sentence
 
-def helsinki_mms_t2st(en_transcript, translated_audio):
-    translated_text = helsinki_t2t(en_transcript)
+def openai_t2t(en_transcript):
+    response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {
+        "role": "system",
+        "content": "You will be provided with a sentence in English, and your task is to translate it into French."
+        },
+        {
+        "role": "user",
+        "content": en_transcript
+        },
+    ],
+    temperature=0,
+    max_tokens=512,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0,
+    )
+    fr_sentence = response["choices"][0]["message"]["content"]
+    return fr_sentence
+
+def helsinki_mms_t2st(en_transcript, translated_audio, api='openai'):
+    assert api in ["hf", "openai"], "Invalid API parameter."
+    if api == 'hf':
+        translated_text = helsinki_t2t(en_transcript)
+    else:
+        translated_text = openai_t2t(en_transcript)
     mms_tts(translated_text, translated_audio)
     return translated_text, translated_audio

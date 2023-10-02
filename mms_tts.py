@@ -146,5 +146,8 @@ def mms_tts(txt, translated_audio):
             noise_scale_w=0.8, length_scale=1.0
         )[0][0,0].cpu().float().numpy()
 
-    sf.write(translated_audio, hyp, hps.data.sampling_rate)
+    with tempfile.NamedTemporaryFile('wb+', suffix='.wav', delete=True) as tempf:
+        sf.write(tempf.name, hyp, hps.data.sampling_rate)
+        subprocess.call(f'ffmpeg -loglevel error -y -i {tempf.name} {translated_audio}', shell=True)
+
     return translated_audio
