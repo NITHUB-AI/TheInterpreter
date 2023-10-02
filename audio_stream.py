@@ -2,8 +2,8 @@ import os
 from pydub import AudioSegment
 from pydub.silence import detect_nonsilent
 import subprocess
-from utils.media import FfmpegCommand
-from utils.files import generate_filename
+from util.media import FfmpegCommand
+from util.files import generate_filename
 import tempfile
 from interpreter import speech_to_speech
 
@@ -41,7 +41,7 @@ def run(audio_path):
         if first_audio_start != 0:
             # there's silence at the beginning of the audio. let's add it back
             process_audio_slice(AudioSegment.silent(
-                first_audio_start, audio.frame_rate))
+                first_audio_start, audio.frame_rate), True)
 
         for j in range(len(audio_segments)):
             start, end = audio_segments[j]
@@ -56,18 +56,22 @@ def run(audio_path):
             if j < len(audio_segments) - 1:
                 next_audio_start, _ = audio_segments[j+1]
                 process_audio_slice(AudioSegment.silent(
-                    next_audio_start - end, audio.frame_rate))
+                    next_audio_start - end, audio.frame_rate), True)
 
         _, last_audio_end = audio_segments[-1]
         if last_audio_end != len(audio):
             # there's silence at the end of the audio. let's add it back
             process_audio_slice(AudioSegment.silent(
                 len(audio) - last_audio_end, audio.frame_rate
-            ))
+            ), True)
 
 aa = AudioSegment.empty()
-def process_audio_slice(seg: AudioSegment):
+def process_audio_slice(seg: AudioSegment, is_silence=False):
     global aa
+    if is_silence:
+        aa = aa + seg
+        return
+    
     with tempfile.NamedTemporaryFile(suffix=".mp3") as tmpfile:
         seg.export(tmpfile.name)
         _, translated_audio = speech_to_speech(tmpfile.name)

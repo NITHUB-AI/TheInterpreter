@@ -2,8 +2,8 @@ import sys
 sys.path.append("./vits")
 
 from helper import convert_audio, transcribe, seamless_t2st, MODE
-from utils.media import extract_audio_and_video_parts, stitch_audio_and_video
-from utils.files import generate_filename
+from util.media import extract_audio_and_video_parts, stitch_audio_and_video
+from util.files import generate_filename
 import argparse
 import re
 import os
