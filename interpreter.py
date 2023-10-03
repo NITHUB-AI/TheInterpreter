@@ -2,11 +2,12 @@ import sys
 sys.path.append("./vits")
 
 from helper import convert_audio, transcribe, seamless_t2st, MODE
-from util.media import extract_audio_and_video_parts, stitch_audio_and_video
+from util.media import extract_audio_and_video_parts, stitch_audio_and_video, FfmpegCommand
 from util.files import generate_filename
 import argparse
 import re
 import os
+import subprocess
 import time
 import tempfile
 import logging
@@ -52,9 +53,19 @@ def video_to_video(file_path: str) -> str:
         translated_text, translated_audio = speech_to_speech(audio)
         print("Translated text:", translated_text)
 
+        # temporarily pad audio with silence when it is less than 30s or truncate when it is more than that.
+        adjusted_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
+        cmd = (FfmpegCommand()
+           .input(translated_audio)
+           .arg('filter_complex', '"aevalsrc=0:d=30[s1];[0][s1]concat=n=2:v=0:a=1,apad"')
+           .arg('t', 30)
+           .output(adjusted_audio)
+           .build())
+        subprocess.call(cmd, shell=True)
+
         # combine audio and video
         out_file = generate_filename(extension='.mp4')
-        success = stitch_audio_and_video(translated_audio, video, out_file)
+        success = stitch_audio_and_video(adjusted_audio, video, f"test/trans_chunks/{out_file}")
 
         return None if not success else out_file
 
