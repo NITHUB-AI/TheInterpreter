@@ -4,7 +4,7 @@ from .files import generate_filename
 
 
 # Extracts the audio and video streams from a video and return their file locations.
-def extract_audio_and_video_parts(video_file: str, output_dir: str) -> tuple[str | None, str | None]:
+def extract_audio_and_video_parts(video_file: str, output_dir: str) -> tuple: #[str | None, str | None]:
     # generate file paths for the audio and video streams
     out_audio = os.path.join(output_dir, generate_filename(extension='.mp3'))
     out_video = os.path.join(output_dir, generate_filename(extension='.mp4'))
