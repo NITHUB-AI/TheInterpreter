@@ -1,7 +1,7 @@
 import sys
 sys.path.append("./vits")
 
-from helper import convert_audio, transcribe, seamless_t2st, MODE
+from helper import convert_audio, transcribe, seamless_t2st, get_duration, MODE
 from util.media import extract_audio_and_video_parts, stitch_audio_and_video, FfmpegCommand
 from util.files import generate_filename
 import argparse
@@ -38,7 +38,7 @@ def speech_to_speech(file_path):
 
         print(f"Resampling file to {sampling_rate}...")
         file_name = re.split(r'/|\\|\.', file_path)[-2]
-        translated_audio, _ = convert_audio(translated_audio, f"fr_{file_name}_{int(time.time())}.mp3", target_sr=sampling_rate)
+        translated_audio, _ = convert_audio(translated_audio, f"{file_name}_fr.mp3", target_sr=sampling_rate)
     print("End.")
 
     return translated_text, translated_audio
@@ -53,10 +53,27 @@ def video_to_video(file_path: str) -> str:
         translated_text, translated_audio = speech_to_speech(audio)
         print("Translated text:", translated_text)
 
+        # slow down playback speed
+        playback_speed = 0.75
+        original_duration = get_duration(audio)
+        translated_duration = get_duration(translated_audio)
+        
+        if translated_duration / original_duration <= playback_speed:
+            slowed_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
+            cmd = (FfmpegCommand()
+            .input(translated_audio)
+            .arg('filter:a', f'"atempo={playback_speed}"')
+            .output(slowed_audio)            
+            .build())
+
+            subprocess.call(cmd, shell=True)
+        else:
+            slowed_audio = translated_audio
+
         # temporarily pad audio with silence when it is less than 30s or truncate when it is more than that.
         adjusted_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
         cmd = (FfmpegCommand()
-           .input(translated_audio)
+           .input(slowed_audio)
            .arg('filter_complex', '"aevalsrc=0:d=30[s1];[0][s1]concat=n=2:v=0:a=1,apad"')
            .arg('t', 30)
            .output(adjusted_audio)
