@@ -4,7 +4,7 @@ import json
 import re
 import requests
 import subprocess
-import time
+from util.media import FfmpegCommand
 from dotenv import load_dotenv
 # s2t API
 import openai
@@ -134,3 +134,39 @@ def helsinki_mms_t2st(en_transcript, translated_audio, api='openai'):
         translated_text = openai_t2t(en_transcript)
     mms_tts(translated_text, translated_audio)
     return translated_text, translated_audio
+
+def split_video(video_path, save_dir):
+
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    file_name = re.split(r'/|\\|\.', video_path)[-2]
+    cmd = (FfmpegCommand()
+           .input(video_path)
+           .arg('y', None)
+           .arg('map', '0')
+           .arg('segment_time', '00:00:30')
+           .arg('reset_timestamps', '1')
+           .arg('f', 'segment')
+           .arg('c', 'copy')
+           .output(f"{save_dir}/{file_name}%03d.mp4")
+           .build())
+
+    retcode = subprocess.call(cmd, shell=True)
+    # print(cmd)
+    return save_dir, file_name if retcode else None
+
+def merge_video(file_name, chunk_dir, prefix='fr'):
+    # merge translated videos together
+    subprocess.call(f"""for f in {chunk_dir}/*.mp4; do echo "file '$f'" >> test_video_list.txt; done""", shell=True)
+    out_video = f"{prefix}_{file_name}.mp4"
+    cmd = (FfmpegCommand()
+            .arg('f', "concat")
+            .arg('safe', 0)
+            .arg('i', f"test_video_list.txt")
+            .arg('c', 'copy')
+            .output(out_video)
+            .build())
+
+    retcode = subprocess.call(cmd, shell=True)
+    return out_video if retcode else None
