@@ -1,8 +1,3 @@
-import subprocess
-# temporary fix for deployment issue
-subprocess.call('chmod +x initialize.sh', shell=True)
-subprocess.call('./initialize.sh', shell=True)
-
 import streamlit as st
 from web.translate_audio import translate_audio
 from web.translate_video import translate_video
