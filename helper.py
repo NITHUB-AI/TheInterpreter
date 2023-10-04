@@ -5,6 +5,7 @@ import re
 import requests
 import subprocess
 from util.media import FfmpegCommand
+from util.files import generate_filename
 from dotenv import load_dotenv
 # s2t API
 import openai
@@ -153,20 +154,21 @@ def split_video(video_path, save_dir):
            .build())
 
     retcode = subprocess.call(cmd, shell=True)
-    # print(cmd)
-    return save_dir, file_name if retcode else None
+    print(retcode)
+    return save_dir, file_name if retcode == 0 else None
 
 def merge_video(file_name, chunk_dir, prefix='fr'):
     # merge translated videos together
-    subprocess.call(f"""for f in {chunk_dir}/*.mp4; do echo "file '$f'" >> test_video_list.txt; done""", shell=True)
+    video_list = generate_filename(extension='.txt')
+    subprocess.call(f"""for f in {chunk_dir}/*.mp4; do echo "file '$f'" >> {video_list}; done""", shell=True)
     out_video = f"{prefix}_{file_name}.mp4"
     cmd = (FfmpegCommand()
             .arg('f', "concat")
             .arg('safe', 0)
-            .arg('i', f"test_video_list.txt")
+            .arg('i', video_list)
             .arg('c', 'copy')
             .output(out_video)
             .build())
 
     retcode = subprocess.call(cmd, shell=True)
-    return out_video if retcode else None
+    return out_video if retcode == 0 else None
