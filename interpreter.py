@@ -44,7 +44,10 @@ def speech_to_speech(file_path):
     return translated_text, translated_audio
 
 
-def video_to_video(file_path: str) -> str:
+def video_to_video(file_path: str, save_dir='test/trans_chunks') -> str:
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+        
     with tempfile.TemporaryDirectory() as tempdir:
         # grab audio and video streams
         audio, video = extract_audio_and_video_parts(file_path, tempdir)
@@ -82,7 +85,7 @@ def video_to_video(file_path: str) -> str:
 
         # combine audio and video
         out_file = generate_filename(extension='.mp4')
-        success = stitch_audio_and_video(adjusted_audio, video, f"test/trans_chunks/{out_file}")
+        success = stitch_audio_and_video(adjusted_audio, video, f"{save_dir}/{out_file}")
 
         return None if not success else out_file
 
