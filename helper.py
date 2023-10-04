@@ -58,7 +58,7 @@ def transcribe(file_path, api="openai"):
     else:
         if api == "openai":
             audio_file= open(file_path, "rb")
-            result = openai.Audio.transcribe("whisper-1", audio_file, api_key=os.getenv("OPENAI_API_KEY"))
+            result = openai.Audio.transcribe("whisper-1", audio_file, api_key=os.getenv("OPENAI_API_KEY"), language='en')
         else:
             API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v2"
             with open(file_path, "rb") as f:
