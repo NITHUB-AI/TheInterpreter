@@ -1,3 +1,6 @@
+import sys
+sys.path.append("./vits")
+
 import os
 import pathlib
 import streamlit as st
