@@ -1,5 +1,6 @@
 # import libraries models:
 import os
+import json
 import re
 import requests
 import subprocess
@@ -36,6 +37,13 @@ if MODE == "2STEP":
 
     # facebook seamlessm4t
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
+
+
+def get_duration(input_filename):
+    out = subprocess.check_output(["ffprobe", "-v", "quiet", "-show_format", "-print_format", "json", input_filename])
+    ffprobe_data = json.loads(out)
+    duration_seconds = float(ffprobe_data["format"]["duration"])
+    return duration_seconds
 
 def convert_audio(input_file, output_file, target_sr=16000):
     # Load the audio file
