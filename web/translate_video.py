@@ -4,6 +4,7 @@ import streamlit as st
 import tempfile
 import time
 from interpreter import video_to_video
+from helper import split_video, merge_video
 
 def get_video_download(video_file):
     with open(video_file, 'rb') as audio:
@@ -22,7 +23,23 @@ def translate_video():
             tmp_file.write(video_file.read())
             
             a = time.time()
-            translated_video = video_to_video(tmp_file.name)
+            with tempfile.TemporaryDirectory() as tempdir:
+                video_file = tmp_file.name
+                save_dir = f'{tempdir}/vchunks'
+                chunk_dir = f'{tempdir}/trans_chunks'
+                _, video_name = split_video(video_file, save_dir)
+
+
+                # translate video chunks
+                for i, vchunk in enumerate(sorted(os.listdir(save_dir))):
+                    start = time.time()
+                    video_to_video(f'{save_dir}/{vchunk}', chunk_dir)
+                    end = time.time() - start
+                    st.write(f'Translated chunk {i+1} in {end}s.')
+
+                # merge translated videos together
+                translated_video = merge_video(video_name, chunk_dir, prefix='fr')
+
             time_spent = time.time() - a
 
             if not translate_video:
