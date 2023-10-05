@@ -107,7 +107,7 @@ git
 
 # ignore tts model
 /fra
-# /vits
+/vits
 *.gz
 
 # ignore local tests artifacts
