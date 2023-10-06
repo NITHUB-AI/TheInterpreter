@@ -34,10 +34,9 @@ The Interpreter can be run in 3 possible modes which are `2STEP`, `API_2STEP` an
    cd TheInterpreter
    ```
 
-3. Run the initialization script which also installs requirements:
+3. Install the required packages:
    ```sh
-   chmod +x initialize.sh
-   ./initialize.sh
+   pip install -r requirements.txt
    ```
 
 4. Add the `MODE` you wish to use, your [OpenAI](https://platform.openai.com/) and [Huggingface](https://huggingface.co/) API Keys to a `.env` file in the project directory in the form below.:
