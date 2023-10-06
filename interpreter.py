@@ -37,8 +37,8 @@ def speech_to_speech(file_path):
             translated_text, translated_audio = text_to_speech_translation(en_text, tempf.name)
 
         print(f"Resampling file to {sampling_rate}...")
-        file_name = re.split(r'/|\\|\.', file_path)[-2] # .split('.')[-2]
-        translated_audio, _ = convert_audio(translated_audio, f"{file_name}_fr.mp3", target_sr=sampling_rate)
+        file_name, ext = file_path.split('.') #re.split(r'/|\\|\.', file_path)[-2]
+        translated_audio, _ = convert_audio(translated_audio, f"{file_name}_fr.{ext}", target_sr=sampling_rate)
     print("End.")
 
     return translated_text, translated_audio
