@@ -161,7 +161,7 @@ def text_to_speech_translation(en_transcript, translated_audio, t2t='openai'):
     else:
         translated_text = openai_t2t(en_transcript)
     # facebook_mms_tts(translated_text, translated_audio)
-    coqui_tts(translated_text, translated_audio, model_id='mms')
+    coqui_tts(translated_text, translated_audio)
     return translated_text, translated_audio
 
 def split_video(video_path, save_dir):
