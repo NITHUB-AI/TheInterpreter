@@ -26,7 +26,9 @@ elif MODE == "API_2STEP":
     # use gradio client
     from gradio_client import Client
 elif MODE == "3STEP":
-    from mms_tts import mms_tts
+    import scipy
+    from TTS.api import TTS
+    from transformers import VitsModel, AutoTokenizer
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
 HELSINKI_API_URL = "https://nithub-ai-helsinki-opus-mt-en-fr.hf.space/api/predict"
@@ -38,6 +40,14 @@ if MODE == "2STEP":
 
     # facebook seamlessm4t
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
+
+if MODE == "3STEP":
+    model = VitsModel.from_pretrained("facebook/mms-tts-fra")
+    tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
+
+    # Init TTS with the target model name
+    mms_tts = TTS(model_name="tts_models/fra/fairseq/vits")
+    css10_tts = TTS(model_name='tts_models/fr/css10/vits')
 
 
 def get_duration(input_filename):
@@ -59,7 +69,10 @@ def transcribe(file_path, api="openai"):
     else:
         if api == "openai":
             audio_file= open(file_path, "rb")
-            result = openai.Audio.transcribe("whisper-1", audio_file, api_key=os.getenv("OPENAI_API_KEY"), language='en')
+            result = openai.Audio.transcribe(
+                "whisper-1", audio_file, 
+                api_key=os.getenv("OPENAI_API_KEY"), language='en'
+            )
         else:
             API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v2"
             with open(file_path, "rb") as f:
@@ -127,13 +140,28 @@ def openai_t2t(en_transcript):
     fr_sentence = response["choices"][0]["message"]["content"]
     return fr_sentence
 
-def helsinki_mms_t2st(en_transcript, translated_audio, api='openai'):
-    assert api in ["hf", "openai"], "Invalid API parameter."
-    if api == 'hf':
+def facebook_mms_tts(fr_sentence, translated_audio):
+    inputs = tokenizer(fr_sentence, return_tensors="pt")
+    with torch.no_grad():
+        output = model(**inputs).waveform
+    scipy.io.wavfile.write(translated_audio, rate=model.config.sampling_rate, data=output.numpy()[0])
+
+def coqui_tts(fr_sentence, translated_audio, model_id='css10'):
+    assert model_id in ["css10", "mms"], "Invalid API parameter."
+    model = css10_tts if model_id == 'css10' else mms_tts
+    model.tts_to_file(
+        text=fr_sentence, 
+        file_path=translated_audio,
+    )
+
+def text_to_speech_translation(en_transcript, translated_audio, t2t='openai'):
+    assert t2t in ["hf", "openai"], "Invalid API parameter."
+    if t2t == 'hf':
         translated_text = helsinki_t2t(en_transcript)
     else:
         translated_text = openai_t2t(en_transcript)
-    mms_tts(translated_text, translated_audio)
+    # facebook_mms_tts(translated_text, translated_audio)
+    coqui_tts(translated_text, translated_audio, model_id='mms')
     return translated_text, translated_audio
 
 def split_video(video_path, save_dir):

@@ -1,5 +1,5 @@
-import sys
-sys.path.append("./vits")
+# import sys
+# sys.path.append("./vits")
 
 from helper import convert_audio, transcribe, seamless_t2st, get_duration, MODE
 from util.media import extract_audio_and_video_parts, stitch_audio_and_video, FfmpegCommand
@@ -15,7 +15,7 @@ logging.getLogger().setLevel(logging.ERROR)
 
 
 if MODE == "3STEP":
-    from helper import helsinki_mms_t2st
+    from helper import text_to_speech_translation
 
 def speech_to_speech(file_path):
     print(f"Starting in {MODE} mode...")
@@ -34,10 +34,10 @@ def speech_to_speech(file_path):
         if "2STEP" in MODE:
             translated_text, translated_audio = seamless_t2st(en_text, tempf.name)
         else:
-            translated_text, translated_audio = helsinki_mms_t2st(en_text, tempf.name)
+            translated_text, translated_audio = text_to_speech_translation(en_text, tempf.name)
 
         print(f"Resampling file to {sampling_rate}...")
-        file_name = re.split(r'/|\\|\.', file_path)[-2]
+        file_name = re.split(r'/|\\|\.', file_path)[-2] # .split('.')[-2]
         translated_audio, _ = convert_audio(translated_audio, f"{file_name}_fr.mp3", target_sr=sampling_rate)
     print("End.")
 
@@ -62,26 +62,19 @@ def video_to_video(file_path: str, save_dir='test/trans_chunks') -> str:
         translated_duration = get_duration(translated_audio)
         
         if translated_duration / original_duration <= playback_speed:
-            slowed_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
+            adjusted_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
             cmd = (FfmpegCommand()
             .input(translated_audio)
             .arg('filter:a', f'"atempo={playback_speed}"')
-            .output(slowed_audio)            
+            .output(adjusted_audio)            
             .build())
 
             subprocess.call(cmd, shell=True)
+        # elif translated_duration > original_duration:
+        #   # truncate video length.
+        #     ...
         else:
-            slowed_audio = translated_audio
-
-        # temporarily pad audio with silence when it is less than 30s or truncate when it is more than that.
-        adjusted_audio = os.path.join(tempdir, generate_filename(extension='.mp3'))
-        cmd = (FfmpegCommand()
-           .input(slowed_audio)
-           .arg('filter_complex', '"aevalsrc=0:d=30[s1];[0][s1]concat=n=2:v=0:a=1,apad"')
-           .arg('t', 30)
-           .output(adjusted_audio)
-           .build())
-        subprocess.call(cmd, shell=True)
+            adjusted_audio = translated_audio
 
         # combine audio and video
         out_file = generate_filename(extension='.mp4')

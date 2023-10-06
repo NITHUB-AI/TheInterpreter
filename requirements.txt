@@ -3,11 +3,9 @@ openai==0.28.0
 openai-whisper==20230918
 torch==2.0.1
 torchaudio==2.0.2
-Cython==0.29.21
-phonemizer==2.2.1
-Unidecode==1.1.1
-soundfile==0.12.1
-streamlit==1.27.0
 pydub==0.25.1
 python-dotenv
 gradio_client
+scipy
+TTS
+streamlit==1.27.0
