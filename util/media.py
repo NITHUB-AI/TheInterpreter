@@ -37,7 +37,7 @@ def stitch_audio_and_video(audio_file: str, video_file: str, output_file: str) -
            .input(video_file)
            .input(audio_file)
            .arg('c:v', 'copy')
-           .arg('c:a', 'copy')
+           .arg('c:a', 'aac')
            .output(output_file)
            .build())
     print(cmd)
