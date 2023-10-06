@@ -7,8 +7,8 @@ from interpreter import video_to_video
 from helper import split_video, merge_video
 
 def get_video_download(video_file):
-    with open(video_file, 'rb') as audio:
-        return audio.read()
+    with open(video_file, 'rb') as video:
+        return video.read()
 
 
 def translate_video():
