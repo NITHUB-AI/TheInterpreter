@@ -11,7 +11,7 @@ st.write("Welcome to The Interpreter! Our demo showcases the power of " +
 
 st.subheader("Let's begin")
 
-options = ["Translate audio", "Translate video"]
+options = ["Translate video", "Translate audio ❌"]
 selected_option = st.selectbox("Select an option:", options)
 
 if selected_option == "Translate audio":
