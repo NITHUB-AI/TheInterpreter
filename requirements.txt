@@ -4,7 +4,7 @@ openai-whisper==20230918
 torch==2.0.1
 torchaudio==2.0.2
 pydub==0.25.1
-python-dotenv
-gradio_client
-TTS
+python-dotenv==1.0.0
+gradio_client===0.5.1
+TTS==0.14.3
 streamlit==1.27.0
