@@ -42,11 +42,11 @@ if MODE == "2STEP":
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
 
 if MODE == "3STEP":
-    model = VitsModel.from_pretrained("facebook/mms-tts-fra")
-    tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
+    model = ... #VitsModel.from_pretrained("facebook/mms-tts-fra")
+    tokenizer = ... #AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
 
     # Init TTS with the target model name
-    mms_tts = TTS(model_name="tts_models/fra/fairseq/vits")
+    mms_tts = ... #TTS(model_name="tts_models/fra/fairseq/vits")
     css10_tts = TTS(model_name='tts_models/fr/css10/vits')
 
 
