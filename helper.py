@@ -27,7 +27,7 @@ elif MODE == "API_2STEP":
     from gradio_client import Client
 elif MODE == "3STEP":
     import scipy
-    from TTS.api import TTS
+    # from TTS.api import TTS
     from transformers import VitsModel, AutoTokenizer
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
@@ -42,12 +42,12 @@ if MODE == "2STEP":
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
 
 if MODE == "3STEP":
-    model = ... #VitsModel.from_pretrained("facebook/mms-tts-fra")
-    tokenizer = ... #AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
+    model = VitsModel.from_pretrained("facebook/mms-tts-fra")
+    tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
 
     # Init TTS with the target model name
-    mms_tts = ... #TTS(model_name="tts_models/fra/fairseq/vits")
-    css10_tts = TTS(model_name='tts_models/fr/css10/vits')
+    mms_tts = ... # TTS(model_name="tts_models/fra/fairseq/vits")
+    css10_tts = ... # TTS(model_name='tts_models/fr/css10/vits')
 
 
 def get_duration(input_filename):
@@ -160,8 +160,8 @@ def text_to_speech_translation(en_transcript, translated_audio, t2t='openai'):
         translated_text = helsinki_t2t(en_transcript)
     else:
         translated_text = openai_t2t(en_transcript)
-    # facebook_mms_tts(translated_text, translated_audio)
-    coqui_tts(translated_text, translated_audio)
+    facebook_mms_tts(translated_text, translated_audio)
+    # coqui_tts(translated_text, translated_audio)
     return translated_text, translated_audio
 
 def split_video(video_path, save_dir):
