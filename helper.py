@@ -27,8 +27,8 @@ elif MODE == "API_2STEP":
     from gradio_client import Client
 elif MODE == "3STEP":
     import scipy
-    # from TTS.api import TTS
-    from transformers import VitsModel, AutoTokenizer
+    from TTS.api import TTS
+    # from transformers import VitsModel, AutoTokenizer
 
 HEADER = {"Authorization": f"Bearer {os.getenv('HF_API_KEY')}"}
 HELSINKI_API_URL = "https://nithub-ai-helsinki-opus-mt-en-fr.hf.space/api/predict"
@@ -37,17 +37,16 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 if MODE == "2STEP":
     # openai whisper
     model = whisper.load_model("large")
-
     # facebook seamlessm4t
     translator = Translator("seamlessM4T_large", vocoder_name_or_card="vocoder_36langs", device=torch.device("cpu"))
 
 if MODE == "3STEP":
-    model = VitsModel.from_pretrained("facebook/mms-tts-fra")
-    tokenizer = AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
+    model = ... # VitsModel.from_pretrained("facebook/mms-tts-fra")
+    tokenizer = ... # AutoTokenizer.from_pretrained("facebook/mms-tts-fra")
 
     # Init TTS with the target model name
     mms_tts = ... # TTS(model_name="tts_models/fra/fairseq/vits")
-    css10_tts = ... # TTS(model_name='tts_models/fr/css10/vits')
+    css10_tts = TTS(model_name='tts_models/fr/css10/vits')
 
 
 def get_duration(input_filename):
@@ -62,10 +61,10 @@ def convert_audio(input_file, output_file, target_sr=16000):
     sr = 16000 if target_sr == 48000 else 48000
     return output_file, sr
 
-def transcribe(file_path, api="openai"):
+def transcribe(file_path, prompt='', api="openai"):
     assert api in ["hf", "openai"], "Invalid API parameter."
     if MODE == "2STEP":
-        result = model.transcribe(file_path, language='English', temperature=0)
+        result = model.transcribe(file_path, language='English', temperature=0, prompt=prompt)
     else:
         if api == "openai":
             audio_file= open(file_path, "rb")
@@ -124,7 +123,7 @@ def openai_t2t(en_transcript):
     messages=[
         {
         "role": "system",
-        "content": "You will be provided with a sentence in English, and your task is to translate it into French."
+        "content": "You will be provided with a sentence in English, and your task is to translate it into French accurately and exactly."
         },
         {
         "role": "user",
@@ -160,8 +159,8 @@ def text_to_speech_translation(en_transcript, translated_audio, t2t='openai'):
         translated_text = helsinki_t2t(en_transcript)
     else:
         translated_text = openai_t2t(en_transcript)
-    facebook_mms_tts(translated_text, translated_audio)
-    # coqui_tts(translated_text, translated_audio)
+    # facebook_mms_tts(translated_text, translated_audio)
+    coqui_tts(translated_text, translated_audio)
     return translated_text, translated_audio
 
 def split_video(video_path, save_dir):
