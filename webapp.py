@@ -1,6 +1,7 @@
 import streamlit as st
 from web.translate_audio import translate_audio
 from web.translate_video import translate_video
+from web.stream_video import stream_video
 
 st.title("The Interpreter: An English-to-French Speech Translator")
 st.write("Welcome to The Interpreter! Our demo showcases the power of " +
@@ -11,10 +12,12 @@ st.write("Welcome to The Interpreter! Our demo showcases the power of " +
 
 st.subheader("Let's begin")
 
-options = ["Translate video", "Translate audio ❌"]
+options = ["Stream video", "Translate video", "Translate audio ❌"]
 selected_option = st.selectbox("Select an option:", options)
 
-if selected_option == "Translate audio":
+if selected_option == "Stream video":
+    stream_video()
+elif selected_option == "Translate audio":
     translate_audio()
 elif selected_option == "Translate video":
     translate_video()
