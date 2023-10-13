@@ -64,7 +64,7 @@ def stream_video():
                 )
                 translation_thread.start()
 
-                st.markdown("Watch the live video on [https://www.youtube.com/@fortuneadekogbe4438/streams](this channel)")# st.video("https://youtube.com/live/YPVkUZCA_SU")
+                st.markdown("Watch the live video on https://www.youtube.com/@fortuneadekogbe4438/streams.")# st.video("https://youtube.com/live/YPVkUZCA_SU")
 
                 while True:
                     if streaming_active and video_queue:
