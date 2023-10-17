@@ -32,12 +32,12 @@ def stream_video():
     options = ["Youtube Link", "Video File"]
     file_option = st.selectbox("Select an option:", options)
 
-    if file_option == options[1]:
+    if file_option == "Video File":
         video_file = st.file_uploader(
             label="Select a video file to transcribe and translate",
             type=["mp4", "avi", "mov"],
             accept_multiple_files=False)
-    else:
+    elif file_option == "Youtube Link":
         youtube_url = st.text_input(label="Enter a YouTube Video link to transcribe and translate")
         st.write("Initiating video download...")
         video_file = tempfile.NamedTemporaryFile(suffix="mp4")
