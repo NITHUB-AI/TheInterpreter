@@ -39,11 +39,9 @@ def stream_video():
             accept_multiple_files=False)
     elif file_option == "Youtube Link":
         youtube_url = st.text_input(label="Enter a YouTube Video link to transcribe and translate")
-        st.write("Initiating video download...")
         video_file = tempfile.NamedTemporaryFile(suffix="mp4")
         command = f'yt-dlp -S res,ext:mp4:m4a --recode mp4 {youtube_url} --force-overwrites -o {video_file}'
         subprocess.run(command, shell=True)
-        st.write("Download finished.")
     
     col1, col2 = st.columns(2, gap="large")
     with col1:
