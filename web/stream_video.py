@@ -26,6 +26,21 @@ def translate_video_chunks(save_dir, chunk_dir):
         tchunk = video_to_video(f'{save_dir}/{vchunk}', chunk_dir)
         video_queue.append(f"{chunk_dir}/{tchunk}")
 
+def get_video_upload():
+    video_file = st.file_uploader(
+        label="Select a video file to transcribe and translate",
+        type=["mp4", "avi", "mov"],
+        accept_multiple_files=False)
+    return video_file
+
+def get_youtube_url():
+    youtube_url = st.text_input(label="Enter a YouTube Video link to transcribe and translate")
+    video_file = tempfile.NamedTemporaryFile(suffix="mp4")
+    command = f'yt-dlp -S res,ext:mp4:m4a --recode mp4 {youtube_url} --force-overwrites -o {video_file.name}'
+    print(command)
+    subprocess.run(command, shell=True)
+    return video_file
+
 def stream_video():
     global streaming_active  # Declare the global flag
 
@@ -33,15 +48,9 @@ def stream_video():
     file_option = st.selectbox("Select an option:", options)
 
     if file_option == options[1]:
-        video_file = st.file_uploader(
-            label="Select a video file to transcribe and translate",
-            type=["mp4", "avi", "mov"],
-            accept_multiple_files=False)
+        video_file = get_video_upload()
     else:
-        youtube_url = st.text_input(label="Enter a YouTube Video link to transcribe and translate")
-        video_file = tempfile.NamedTemporaryFile(suffix="mp4")
-        command = f'yt-dlp -S res,ext:mp4:m4a --recode mp4 {youtube_url} --force-overwrites -o {video_file}'
-        subprocess.run(command, shell=True)
+        video_file = get_youtube_url()
     
     col1, col2 = st.columns(2, gap="large")
     with col1:
