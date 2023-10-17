@@ -44,13 +44,17 @@ def get_youtube_url():
 def stream_video():
     global streaming_active  # Declare the global flag
 
-    options = ["Youtube Link", "Video File"]
-    file_option = st.selectbox("Select an option:", options)
+    # options = ["Youtube Link", "Video File"]
+    # file_option = st.selectbox("Select an option:", options)
 
-    if file_option == options[1]:
-        video_file = get_video_upload()
-    else:
-        video_file = get_youtube_url()
+    # if file_option == options[1]:
+    #     video_file = get_video_upload()
+    # else:
+    #     video_file = get_youtube_url()
+    video_file = st.file_uploader(
+        label="Select a video file to transcribe and translate",
+        type=["mp4", "avi", "mov"],
+        accept_multiple_files=False)
     
     col1, col2 = st.columns(2, gap="large")
     with col1:
@@ -75,10 +79,10 @@ def stream_video():
             chunk_dir = f'{tempdir}/trans_chunks'
 
             _ = split_video(video_file_name, save_dir)
-            try: 
-                video_file.close() 
-            except: 
-                ...
+            # try: 
+            #     video_file.close() 
+            # except: 
+            #     ...
             # Create and start the thread, passing the directories as arguments
             translation_thread = threading.Thread(
                 target=translate_video_chunks, args=(save_dir, chunk_dir)
