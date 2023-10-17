@@ -37,7 +37,7 @@ def stream_video():
             label="Select a video file to transcribe and translate",
             type=["mp4", "avi", "mov"],
             accept_multiple_files=False)
-    elif file_option == "Youtube Link":
+    else:
         youtube_url = st.text_input(label="Enter a YouTube Video link to transcribe and translate")
         video_file = tempfile.NamedTemporaryFile(suffix="mp4")
         command = f'yt-dlp -S res,ext:mp4:m4a --recode mp4 {youtube_url} --force-overwrites -o {video_file}'
