@@ -64,7 +64,7 @@ def stream_video():
                 )
                 translation_thread.start()
 
-                st.markdown("Watch the live video on https://www.youtube.com/@fortuneadekogbe4438/streams.")# st.video("https://youtube.com/live/YPVkUZCA_SU")
+                st.markdown("Watch the live video on https://www.youtube.com/@fortuneadekogbe4438/streams.")
 
                 while True:
                     if streaming_active and video_queue:
@@ -76,17 +76,3 @@ def stream_video():
                                    f'-c:a aac -f flv rtmp://a.rtmp.youtube.com/live2/{stream_key}')
                         subprocess.run(command, shell=True)
                         print(time.time() - start)
-                        # os.remove(video_path)  # Optionally delete the video chunk after streaming
-
-                # video_placeholder = st.empty()
-                # while True:
-                #     if video_queue:
-                #         video_path = video_queue.popleft()
-                #         print(video_path)
-                #         video_file = open(video_path, "rb")
-                #         start = time.time()
-                #         duration = get_duration(video_path)
-                #         video_placeholder.video(video_file.read())
-                #         end = time.time()
-                #         time.sleep(duration - (end - start))
-                #         video_file.close()
