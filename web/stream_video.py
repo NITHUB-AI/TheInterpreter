@@ -4,12 +4,13 @@ import streamlit as st
 import tempfile
 import time
 from interpreter import video_to_video
-from helper import split_video, get_duration
+from helper import split_video, get_duration, load_dotenv
 # introducing
 import subprocess
 import threading
-from collections import deque 
+from collections import deque
 
+load_dotenv()
 # Queue to hold video chunks
 video_queue = deque()
 
@@ -76,7 +77,7 @@ def stream_video():
                         video_path = video_queue.popleft()
                         print(f"Streaming {video_path}...")
                         start = time.time()
-                        stream_key = "tqsz-8vgc-pjqm-pgqh-2cuy"
+                        stream_key = os.getenv("STREAM_KEY")
                         command = (f'ffmpeg -loglevel error -re -i {video_path} -c:v libx264 -preset medium -crf 22 '
                                    f'-c:a aac -f flv rtmp://a.rtmp.youtube.com/live2/{stream_key}')
                         subprocess.run(command, shell=True)
