@@ -173,7 +173,7 @@ def split_video(video_path, save_dir):
            .input(video_path)
            .arg('y', None)
            .arg('map', '0')
-           .arg('segment_time', '00:00:30')
+           .arg('segment_time', '00:01:00')
            .arg('reset_timestamps', '1')
            .arg('f', 'segment')
            .arg('c', 'copy')
