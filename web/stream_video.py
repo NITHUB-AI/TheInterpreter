@@ -5,6 +5,8 @@ import tempfile
 import time
 from interpreter import video_to_video
 from helper import split_video, get_duration, load_dotenv
+from video_download import download_youtube_video
+
 # introducing
 import subprocess
 import threading
@@ -35,22 +37,18 @@ def translate_video_chunks(save_dir, chunk_dir):
 def stream_video():
     # global streaming_active  # Declare the global flag
 
-    video_file = st.file_uploader(
-        label="Select a video file to transcribe and translate",
-        type=["mp4", "avi", "mov"],
-        accept_multiple_files=False)
-    
-    # col1, col2 = st.columns(2, gap="large")
-    # with col1:
-    #     start_button = st.button("Start Streaming")
-    # with col2:
-    #     stop_button = st.button("Stop Streaming")
+    options = ["Upload Video", "Enter Youtube Link"]
+    selected_option = st.selectbox("Select an option:", options)
+    if selected_option == "Upload Video":    
+        video_file = st.file_uploader(
+            label="Select a video file to transcribe and translate",
+            type=["mp4", "avi", "mov"],
+            accept_multiple_files=False)
+    else:
+        youtube_url = st.text_input("Enter YouTube URL")
+        video_file = tempfile.NamedTemporaryFile(suffix='mp4')
+        download_youtube_video(youtube_url, video_file.name)
 
-    # Update the global flag when buttons are pressed
-    # if start_button:
-    #     streaming_active = True
-    # if stop_button:
-    #     streaming_active = False
 
     if video_file:
         ext = pathlib.Path(video_file.name).suffix
@@ -58,7 +56,8 @@ def stream_video():
             tmp_file.write(video_file.read())
 
             with tempfile.TemporaryDirectory() as tempdir:
-                video_file = tmp_file.name
+                video_file = tmp_file.name if type(video_file) != tempfile._TemporaryFileWrapper else f"{video_file.name}.mp4"
+                print("Here: ", video_file)
                 save_dir = f'{tempdir}/vchunks'
                 chunk_dir = f'{tempdir}/trans_chunks'
 
