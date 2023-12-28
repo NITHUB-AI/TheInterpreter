@@ -10,9 +10,7 @@ import os
 import subprocess
 import time
 import tempfile
-import logging
-logging.getLogger().setLevel(logging.ERROR)
-
+import log_util
 
 if MODE == "3STEP":
     from helper import text_to_speech_translation
@@ -27,7 +25,7 @@ def speech_to_speech(file_path):
         
         print("Transcribing audio file...")
         en_text = transcribe(converted_file_path)
-    print(en_text)
+    log_util.log_message('info', f"Original Speech: {en_text}")
 
     print("translating text and generating speech...")
     with tempfile.NamedTemporaryFile('wb+', suffix='.mp3', delete=True) as tempf:
@@ -54,7 +52,8 @@ def video_to_video(file_path: str, save_dir='test/trans_chunks') -> str:
 
         # translate audio
         translated_text, translated_audio = speech_to_speech(audio)
-        print("Translated text:", translated_text)
+        # print("Translated text:", translated_text)
+        log_util.log_message('info', f"Translated Speech: {translated_text}")
 
         # slow down playback speed
         playback_speed = 0.75
