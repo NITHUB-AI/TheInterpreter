@@ -44,6 +44,7 @@ The Interpreter can be run in 3 possible modes which are `2STEP`, `API_2STEP` an
    OPENAI_API_KEY=<YOUR_API_KEY>
    HF_API_KEY=<YOUR_API_KEY>
    MODE=3STEP
+   STREAM_KEY=<YOUTUBE_STREAM_KEY>
    ```
 
 ### Usage
